@@ -1,5 +1,7 @@
 <p align="center"><img align="center" style="width:320px" src="https://jobguy.work/images/logo.svg"/></p><br/>
 
+<div dir='rtl'>
+
 ## جاب‌گای چیست؟
 
 اونجا وضعیت چطوریه؟  یه سوال به همین کلیت و ابهام
@@ -27,7 +29,7 @@
 بازگو کردن تجربه = شفافیت
 
 
-
+</div>
 
 
 # Job Guy Backend
