@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: jobguydb
+      POSTGRES_PASSWORD: db_password
+      POSTGRES_USER: jobguy
+  redis-db:
+    image: redis
+    restart: unless-stopped
+  web:
+    build: .
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      - db
+      - redis-db
+    restart: unless-stopped
+volumes:
+  db-data:
+    driver: local

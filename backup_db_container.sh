@@ -1,0 +1,1 @@
+pg_dump --user jobguy --dbname jgdb > jobguydb_backup.sql
