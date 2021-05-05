@@ -37,6 +37,8 @@
 # Contribution
 Job Guy development depends on your green codes :)
 
+You could also support us financially by visiting https://jobguy.work/donate
+
 You can add features, fix bugs, write tests and etc, but for the sake of coordination please join the telegram group https://t.me/jobguycontribution before starting to code.
 
 
