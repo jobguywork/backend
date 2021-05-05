@@ -17,11 +17,12 @@ class Donate(models.Model):
     USDT = 'US'
     DGB = 'DB'
     ETC = 'ET'
+    ETH = 'EH'
     XLM = 'XL'
     QTUM = 'QT'
 
     COIN_CHOICES = (
-        (LTC, 'LTC'),   
+        (LTC, 'LTC'),
         (ONE, 'ONE'),
         (TOMO, 'TOMO'),
         (DOGE, 'DOGE'),
@@ -32,6 +33,7 @@ class Donate(models.Model):
         (USDT, 'USDT'),
         (DGB, 'DGB'),
         (ETC, 'ETC'),
+        (ETH, 'ETH'),
         (XLM, 'XLM'),
         (QTUM, 'QTUM'),
     )
