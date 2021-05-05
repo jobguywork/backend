@@ -1,4 +1,5 @@
 import hashlib
+import time
 
 from django.contrib.auth.models import User
 from django.db import transaction
@@ -30,6 +31,7 @@ def open_auth_user_creator(email, first_name, last_name, profile_image):
     user.save()
     nick_name = hashlib.new('md5')
     nick_name.update(email.encode())
+    nick_name.update(str(time.time()).encode())
     user.profile.nick_name = nick_name.hexdigest()
     user.profile.profile_image = utilities.file_uploader(user.profile.nick_name, profile_image)
     user.profile.email = email
