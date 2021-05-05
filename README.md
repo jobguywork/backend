@@ -30,14 +30,15 @@
 
 
 
-#Job Guy Backend
+# Job Guy Backend
 
+# Contribution
 Job Guy development depends on your green codes :)
 
 You can add features, fix bugs, write tests and etc, but for the sake of coordination please send an email to jobguyir@gmail.com before starting to code.
 
 
-##Reset database
+## Reset database
 
     sudo su postgres ->
      psql ->
