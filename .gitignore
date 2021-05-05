@@ -58,3 +58,4 @@ jobguydb_backup
 static/
 backup.sh
 gunicorn-pid
+jobguydb_backup.sql.zip
