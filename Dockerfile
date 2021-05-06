@@ -13,7 +13,7 @@ RUN apt-get install -y python3-dev
 RUN apt-get install -y libmysqlclient-dev
 RUN apt-get install -y git
 RUN apt-get install -y libpq-dev
-RUN python3 -m pip3 install --upgrade pip3
+RUN pip3 install --upgrade pip
 RUN pip3 install --upgrade setuptools
 RUN pip install ez_setup
 
