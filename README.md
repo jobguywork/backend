@@ -41,6 +41,7 @@ You could also support us financially by visiting https://jobguy.work/donate
 
 You can add features, fix bugs, write tests and etc, but for the sake of coordination please send an email to jobguyir@gmail.com before starting to code.
 
+For openning pull requests you have to send PR's to [`develop`](https://github.com/jobguywork/backend/tree/develop) branch.
 
 ## Reset database
 
