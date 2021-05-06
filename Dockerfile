@@ -14,7 +14,7 @@ RUN apt-get install -y libmysqlclient-dev
 RUN apt-get install -y git
 
 # WORKDIR $DOCKYARD_SRVHOME
-RUN mkdir media static logs
+RUN mkdir $DOCKYARD_SRVHOME/media static logs
 
 VOLUME ["$DOCKYARD_SRVHOME/media/", "$DOCKYARD_SRVHOME/logs/"]
 
