@@ -8,17 +8,8 @@ on:
 
 jobs:
 
-  build:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag jg-backend:$(date +%s)
-  
-  Push:
-    name: Push Docker image to GitHub Packages
+  Build:
+    name: Build and Push
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -32,5 +23,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: amireshoon/backend/jobguy-backend
+          repository: jobguywork/backend/jobguy-backend
           tag_with_ref: true
