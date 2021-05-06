@@ -23,5 +23,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: jobguywork/backend/jobguy-backend
+          repository: amireshoon/backend/jobguy-backend
           tag_with_ref: true
