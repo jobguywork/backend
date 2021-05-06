@@ -13,7 +13,7 @@ RUN apt-get install -y python3-dev
 RUN apt-get install -y libmysqlclient-dev
 RUN apt-get install -y git
 RUN apt-get install -y libpq-dev
-RUN apt-get install -y postgresql postgresql-dev python-dev
+RUN apt-get install -y postgresql
 
 RUN mkdir $DOCKYARD_SRVHOME/media static logs
 
