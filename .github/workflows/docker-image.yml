@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ docker ]
+    branches: [ master ]
   pull_request:
-    branches: [ docker ]
+    branches: [ master ]
 
 jobs:
 
@@ -23,5 +23,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: amireshoon/backend/jobguy-backend
+          repository: jobguywork/backend/jobguy-backend
           tag_with_ref: true
