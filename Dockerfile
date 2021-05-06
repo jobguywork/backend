@@ -12,8 +12,9 @@ RUN apt-get install -y python3 python3-pip
 RUN apt-get install -y python3-dev
 RUN apt-get install -y libmysqlclient-dev
 RUN apt-get install -y git
+RUN apt-get install -y libpq-dev
+RUN apt-get install -y postgresql postgresql-dev python-dev
 
-# WORKDIR $DOCKYARD_SRVHOME
 RUN mkdir $DOCKYARD_SRVHOME/media static logs
 
 VOLUME ["$DOCKYARD_SRVHOME/media/", "$DOCKYARD_SRVHOME/logs/"]
