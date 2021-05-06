@@ -12,9 +12,12 @@ RUN apt-get install -y python3 python3-pip
 RUN apt-get install -y python3-dev
 RUN apt-get install -y libmysqlclient-dev
 RUN apt-get install -y git
+RUN apt-get install -y libpq-dev
+RUN pip3 install --upgrade pip
+RUN pip3 install --upgrade setuptools
+RUN pip install ez_setup
 
-WORKDIR $DOCKYARD_SRVHOME
-RUN mkdir media static logs
+RUN mkdir $DOCKYARD_SRVHOME/media static logs
 
 VOLUME ["$DOCKYARD_SRVHOME/media/", "$DOCKYARD_SRVHOME/logs/"]
 
