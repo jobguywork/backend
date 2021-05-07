@@ -55,6 +55,7 @@ For first open source contributers:
 
 7. Create a PR with [`develop`](https://github.com/jobguywork/backend/tree/develop) branch, add description about your fix and the related issue if needed.
 
+For openning pull requests you have to send PR's to [`develop`](https://github.com/jobguywork/backend/tree/develop) branch.
 
 ## Reset database
 
