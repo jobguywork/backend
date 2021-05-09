@@ -5,6 +5,7 @@ import time
 
 from django.conf import settings
 from django.utils.translation import ugettext as _
+from rest_framework import status
 from rest_framework.response import Response
 
 
@@ -13,7 +14,6 @@ class BaseResponse:
         self.message = kwargs.get('message')
         self.show_type = kwargs.get('show_type', settings.MESSAGE_SHOW_TYPE['TOAST'])
         self.current_time = round(time.time())
-        self.status = kwargs.get("status")
         self.success = kwargs.get("success")
 
     def send(self):
@@ -25,19 +25,21 @@ class BaseResponse:
 
 
 class ErrorResponse(BaseResponse):
-    def __init__(self, dev_error=None, errors=None, **kwargs):
+    def __init__(self, message, dev_error=None, errors=None, **kwargs):
         super().__init__(**kwargs)
+        self.message = message
         self.dev_error = dev_error
         self.errors = errors
+        self.status = kwargs.get("status", 400)
 
 
 class SuccessResponse(BaseResponse):
-    def __init__(self, message, data=None, **kwargs):
+    def __init__(self, data=None, **kwargs):
         super().__init__(**kwargs)
-        self.message = message
         self.data = data
         self.index = kwargs.get('index')
         self.total = kwargs.get('total')
+        self.status = kwargs.get("status", 200)
 
 
 class ExceptionHandlerMiddleware(object):
@@ -52,7 +54,7 @@ class ExceptionHandlerMiddleware(object):
     @staticmethod
     def __make_response(status_code: int, extra: dict):
         return {
-            'success': True if status_code // 100 == 2 else False,
+            'success': status.is_success(status_code),
             'code': status_code,
             'current_time': round(time.time()),
             'show_type': settings.MESSAGE_SHOW_TYPE['NONE'],
