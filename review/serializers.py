@@ -185,12 +185,9 @@ class CompanyReviewSerializer(serializers.Serializer):
             company_review.cons.add(cons)
             cons.add_cons_priority()
         validated_data['company'].handle_company_review_statics()
-        review_link = '{}/review/{}'.format(settings.WEB_BASE_PATH, company_review.pk)
-        utilities.telegram_notify('New review: on {}, \n by {} {}, \n link: {} {}'.format(company_review.company.name,
-                                                                                          company_review.creator.first_name,
-                                                                                          company_review.creator.last_name,
-                                                                                          review_link,
-                                                                                          '#review'),
+        utilities.telegram_notify('New review: on {}, \n by {}, \n {}'.format(company_review.company.name,
+                                                                              company_review.creator.username,
+                                                                              '#review'),
                                   company_review.id, 'review', company_review.title, company_review.description,
                                   '{} {}'.format(company_review.creator.first_name, company_review.creator.last_name))
 
@@ -236,12 +233,9 @@ class CompanyReviewSerializer(serializers.Serializer):
             instance.job = Job.objects.get(job_slug=validated_data['job']['job_slug'])
         instance.save()
         instance.company.handle_company_review_statics()
-        review_link = '/review/{}'.format(settings.WEB_BASE_PATH, instance.pk)
-        utilities.telegram_notify('Review update: on {}, \n by {} {}, \n link: {} {}'.format(instance.company.name,
-                                                                                             instance.creator.first_name,
-                                                                                             instance.creator.last_name,
-                                                                                             review_link,
-                                                                                             '#update_review'),
+        utilities.telegram_notify('Review update: on {}, \n by {}, \n {}'.format(instance.company.name,
+                                                                                 instance.creator.username,
+                                                                                 '#update_review'),
                                   instance.id, 'review', instance.title, instance.description,
                                   '{} {}'.format(instance.creator.first_name, instance.creator.last_name))
         return instance
@@ -537,12 +531,9 @@ class InterviewSerializer(serializers.Serializer):
             interview.cons.add(cons)
             cons.add_cons_priority()
         validated_data['company'].handle_company_interview_statics()
-        review_link = '{}/interview/{}'.format(settings.WEB_BASE_PATH, interview.pk)
-        utilities.telegram_notify('New interview: on {}, \n by {} {}, \n link: {} {}'.format(interview.company.name,
-                                                                                             interview.creator.first_name,
-                                                                                             interview.creator.last_name,
-                                                                                             review_link,
-                                                                                             '#interview'),
+        utilities.telegram_notify('New interview: on {}, \n by {}, \n {}'.format(interview.company.name,
+                                                                                 interview.creator.username,
+                                                                                 '#interview'),
                                   interview.id, 'interview', interview.title, interview.description,
                                   '{} {}'.format(interview.creator.first_name, interview.creator.last_name))
         return interview
@@ -585,12 +576,9 @@ class InterviewSerializer(serializers.Serializer):
 
         instance.save()
         instance.company.handle_company_interview_statics()
-        interview_link = '{}/interview/{}'.format(settings.WEB_BASE_PATH, instance.pk)
-        utilities.telegram_notify('Interview update: on {}, \n by {} {}, \n link: {} {}'.format(instance.company.name,
-                                                                                                instance.creator.first_name,
-                                                                                                instance.creator.last_name,
-                                                                                                interview_link,
-                                                                                                '#update_interview'),
+        utilities.telegram_notify('Interview update: on {}, \n by {}, \n  {}'.format(instance.company.name,
+                                                                                     instance.creator.username,
+                                                                                     '#update_interview'),
                                   instance.id, 'interview', instance.title, instance.description,
                                   '{} {}'.format(instance.creator.first_name, instance.creator.last_name))
         return instance
