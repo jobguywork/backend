@@ -63,6 +63,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -125,8 +126,17 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
+from django.utils.translation import ugettext_lazy as _
+LOCALE_PATHS = (
+    os.path.join(os.path.dirname(BASE_DIR), 'locale'),
+)
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGES = (
+    ('fa', _('Persian')),
+    ('en', _('English')),
+)
+
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'Asia/Tehran'
 
@@ -223,8 +233,15 @@ CORS_ORIGIN_WHITELIST = (
 
 APPEND_SLASH = True
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '1037119634321-4ua5hpm3m1dojoujkpipptckeu6toomq.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'NUWOwqZvew_isGYa5FjtQQXe'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY', None)
+
+if not SOCIAL_AUTH_GOOGLE_OAUTH2_KEY:
+    raise Exception('Add SOCIAL_AUTH_GOOGLE_OAUTH2_KEY env variable')
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET', None)
+
+if not SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET:
+    raise Exception('Add SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET env variable')
 
 LOCATION_FIELD = {
     'map.provider': 'openstreetmap',

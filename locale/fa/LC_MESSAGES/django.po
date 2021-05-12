@@ -1,0 +1,224 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the MIT License license as the  jobguywork/backend package.
+# FIRST AUTHOR <allalirezamail@gmail.com>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: https://github.com/jobguywork/backend/issues\n"
+"POT-Creation-Date: 2021-05-09 20:15+0430\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: imkarimkarim <allalirezamail@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: Persian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: authnz/admin.py:45
+msgid "Personal info"
+msgstr "اطلاعات شخصی"
+
+#: authnz/admin.py:46
+msgid "Permissions"
+msgstr "مجوزها"
+
+#: authnz/admin.py:49
+msgid "Important dates"
+msgstr "تاریخ های مهم"
+
+#: authnz/admin.py:151
+#, python-format
+msgid "%(name)s object with primary key %(key)r does not exist."
+msgstr "%(name)s شیء با کلید اصلی %(key)r وجود ندارد."
+
+#: authnz/admin.py:161
+msgid "Password changed successfully."
+msgstr "گذرواژه با موفقیت تغییر کرد."
+
+#: authnz/admin.py:181
+#, python-format
+msgid "Change password: %s"
+msgstr "تغییر گذرواژه: %s"
+
+#: authnz/serialziers.py:15
+msgid ""
+"Phone number must be entered in the format: '9137866088'. 10 digits allowed."
+msgstr "شماره تلفن باید به این صورت وارد شود '9137866088 . ۱۰ رقم مجاز است.'"
+
+#: authnz/serialziers.py:21
+msgid "Path must start with ~/media/"
+msgstr "مسیر باید با ~/media/ شروع شود"
+
+#: authnz/serialziers.py:23 utilities/utilities.py:127
+msgid "File does not exist"
+msgstr "پرونده وجود ندارد"
+
+#: authnz/serialziers.py:32 authnz/serialziers.py:49 authnz/serialziers.py:112
+msgid "Password must contain digit."
+msgstr "گذرواژه باید شامل عدد باشد"
+
+#: authnz/serialziers.py:34 authnz/serialziers.py:51 authnz/serialziers.py:114
+msgid "Password must contain alpha."
+msgstr "گذرواژه باید شامل حروف باشد"
+
+#: authnz/serialziers.py:75
+msgid "This nick name exist."
+msgstr "این نام مستعار وجود دارد."
+
+#: authnz/views.py:47
+msgid "This email is registered before."
+msgstr "این ایمیل قبلا ثبت شده است."
+
+#: authnz/views.py:58
+msgid "Check your email box."
+msgstr "صندوق پستی الکترونیکی خود را چک کنید."
+
+#: authnz/views.py:82
+msgid "Email is invalid or not confirmed"
+msgstr "ایمیل نامعتبر یا تایید نشده است."
+
+#: authnz/views.py:90 authnz/views.py:145
+msgid "This user is inactive, contact us."
+msgstr "این کابر فعال نیست، با ما تماس بگیرید."
+
+#: authnz/views.py:92
+msgid "Email or Password is invalid."
+msgstr "ایمیل یا گذرواژه صحیح نیست."
+
+#: authnz/views.py:120
+msgid "This user is deactivated, contact us."
+msgstr "این کاربر غیرفعال است، با ما تماس بگیرید."
+
+#: authnz/views.py:122
+msgid "Old Password is invalid."
+msgstr "رمز قدیمی نامعتبر است."
+
+#: authnz/views.py:168
+msgid "This nick name exists"
+msgstr "این نام مستعار وجود دارد."
+
+#: authnz/views.py:273 authnz/views.py:314
+msgid "Email does not exist."
+msgstr "ایمیل وجود ندارد."
+
+#: authnz/views.py:283
+msgid "Check Your email for token."
+msgstr "ایمیل خود را برای مشاهده توکن چک کنید."
+
+#: authnz/views.py:285
+msgid "We sent an token recently please try later"
+msgstr "ما اخیرا یک توکن فرستادیم لطفا بعدا دوباره امتحان کنید."
+
+#: authnz/views.py:287
+msgid "This account is inactive."
+msgstr "این حساب فعال نیست."
+
+#: authnz/views.py:289
+msgid "This account has no email."
+msgstr "ایمیلی به این حساب تعلق ندارد."
+
+#: authnz/views.py:327
+msgid "Token timeout."
+msgstr "اتمام زمان استفاده از توکن."
+
+#: authnz/views.py:329
+msgid "We sent a new token recently please try it."
+msgstr "ما یک توکن جدید فرستادیم، لطفا امتحان کنید."
+
+#: authnz/views.py:331
+msgid "Your account is inactive."
+msgstr "این حساب فعال نیست."
+
+#: authnz/views.py:362 authnz/views.py:416
+msgid "Google Wrong issuer."
+msgstr "صادر کننده اشتباه گوگل"
+
+#: authnz/views.py:366 authnz/views.py:420
+msgid "Scope need to have email, given name, family, picture"
+msgstr "محدوده نیازمند ایمیل، نام، نام خانوادگی و عکس است."
+
+#: authnz/views.py:374 authnz/views.py:433
+msgid "Wrong backend"
+msgstr "بک‌اند اشتباه"
+
+#: authnz/views.py:380
+msgid "Your user account is deactivated, contact us for more information."
+msgstr "حساب کاربری شما غیرفعال شده است، برای اطلاعات بیشتر با ما تماس بگیرید."
+
+#: authnz/views.py:404
+msgid "This email used before."
+msgstr "این ایمیل قبلا استفاده شده است."
+
+#: authnz/views.py:427
+msgid "This email was used before."
+msgstr "این ایمیل قبلا استفاده شده بود."
+
+#: company/serializers.py:416 company/serializers.py:499
+msgid "Company with this name exists."
+msgstr "شرکتی با همین نام وجود دارد."
+
+#: company/serializers.py:420 company/serializers.py:503
+msgid "City with this name does not exist."
+msgstr "شهری با این نام وجود ندارد."
+
+#: company/serializers.py:424 company/serializers.py:507
+msgid "Industry with this slug does not exist."
+msgstr "صنعتی با این کد وجود ندارد."
+
+#: config/views.py:50
+msgid "Error in creating Integer config"
+msgstr "خطا در درست کردن تنظیمات عدد صحیح."
+
+#: config/views.py:81
+msgid "Invalid request."
+msgstr "درخواست نامعتبر"
+
+#: utilities/exceptions.py:7
+msgid "Operation failed."
+msgstr "عملیات شکست خورد."
+
+#: utilities/permissions.py:47
+msgid "No Permission to update, not yours"
+msgstr "اجازه بروزرسانی برای شما نیست"
+
+#: utilities/permissions.py:54
+msgid "No Permission to update, time expired"
+msgstr "اجازه برای بروزرسانی نیست، اتمام زمان."
+
+#: utilities/permissions.py:73 utilities/permissions.py:97
+msgid "No Permission to delete"
+msgstr "اجازه برای حذف نیست."
+
+#: utilities/permissions.py:79
+msgid "Max email send reached"
+msgstr "حداکثر میزان ارسال ایمیل فرا رسید."
+
+#: utilities/responses.py:108
+msgid "Not Acceptable request, maybe not supported version"
+msgstr "درخواست غیرقابل قبول، شاید مشکل نسخه غیرقابل پشتیبانی."
+
+#: utilities/responses.py:119
+msgid "Unsupported media type"
+msgstr "رسانه پشتیبانی نشده"
+
+#: utilities/serializers.py:23
+msgid "{} type is not supported"
+msgstr "{} نوع پشتیبانی نمی شود"
+
+#: utilities/serializers.py:26
+msgid "Max file size is {} and your file size is {}"
+msgstr "حداکثر سایز پرونده {} است ولی سایز پرونده شما {} است."
+
+#: utilities/tools/delete.py:33 utilities/tools/update.py:22
+#: utilities/tools/update.py:39
+msgid "Instance does not exist."
+msgstr "نمونه وجود ندارد."
+
+#: utilities/utilities.py:131 utilities/utilities.py:177
+#: utilities/utilities.py:196
+msgid "There is an error with media server connection..."
+msgstr "مشکلی از سمت سرور رسانه ها پیش آمده..."
