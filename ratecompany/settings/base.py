@@ -63,6 +63,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -125,8 +126,17 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
+from django.utils.translation import ugettext_lazy as _
+LOCALE_PATHS = (
+    os.path.join(os.path.dirname(BASE_DIR), 'locale'),
+)
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGES = (
+    ('fa', _('Persian')),
+    ('en', _('English')),
+)
+
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'Asia/Tehran'
 
