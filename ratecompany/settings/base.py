@@ -233,16 +233,6 @@ CORS_ORIGIN_WHITELIST = (
 
 APPEND_SLASH = True
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY', None)
-
-if not SOCIAL_AUTH_GOOGLE_OAUTH2_KEY:
-    raise Exception('Add SOCIAL_AUTH_GOOGLE_OAUTH2_KEY env variable')
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET', None)
-
-if not SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET:
-    raise Exception('Add SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET env variable')
-
 LOCATION_FIELD = {
     'map.provider': 'openstreetmap',
     'map.zoom': 15,
