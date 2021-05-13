@@ -1,4 +1,5 @@
 from hashlib import md5
+from time import time
 
 from django.contrib.auth.models import User
 from django.db import models
@@ -28,6 +29,13 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+    def save(self, *args, **kwargs):
+        if self.nick_name is None:
+            nick_name = md5(str(time()).encode())
+            nick_name.update(self.user.username.encode())
+            self.nick_name = nick_name.hexdigest()
+        super().save(*args, **kwargs)
 
     @receiver(post_save, sender=User)
     def create_user_profile(sender, instance, created, **kwargs):

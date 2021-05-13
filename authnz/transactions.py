@@ -1,6 +1,3 @@
-import hashlib
-import time
-
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.conf import settings
@@ -29,10 +26,6 @@ def change_user_password(user, password):
 def open_auth_user_creator(email, first_name, last_name, profile_image):
     user = User(username=email, email=email, first_name=first_name.title(), last_name=last_name.title())
     user.save()
-    nick_name = hashlib.new('md5')
-    nick_name.update(email.encode())
-    nick_name.update(str(time.time()).encode())
-    user.profile.nick_name = nick_name.hexdigest()
     user.profile.profile_image = utilities.file_uploader(user.profile.nick_name, profile_image)
     user.profile.email = email
     user.profile.email_confirmed = True
