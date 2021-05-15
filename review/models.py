@@ -79,6 +79,9 @@ class CompanyReview(models.Model):
     reply = models.CharField(max_length=40000, null=True, blank=True)
     reply_created = models.DateTimeField(null=True)
 
+    class Meta:
+        ordering = ('-created',)
+
     def __str__(self):
         return self.title
 
@@ -141,6 +144,9 @@ class Interview(models.Model):
     ip = models.CharField(max_length=20, null=True, blank=True)
     reply = models.CharField(max_length=40000, null=True, blank=True)
     reply_created = models.DateTimeField(null=True)
+
+    class Meta:
+        ordering = ('-created',)
 
     def __str__(self):
         return self.title
