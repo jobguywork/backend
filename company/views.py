@@ -334,7 +334,6 @@ class CompanyReviewListView(generics.ListAPIView):
             size, index = permissions.pagination_permission(request.user, size, index)
             size = index + size
             data = serialize_data.data
-            data = sorted(data, key=lambda x: x['vote_count'], reverse=True)
             return responses.SuccessResponse(data[index:size], index=index, total=len(data)).send()
         except models.Company.DoesNotExist as e:
             return responses.ErrorResponse(message='Instance does not Found.', status=404).send()
@@ -400,7 +399,6 @@ class CompanyInterReviewListView(generics.ListAPIView):
             size, index = permissions.pagination_permission(request.user, size, index)
             size = index + size
             data = serialize_data.data
-            data = sorted(data, key=lambda x: x['vote_count'], reverse=True)
             return responses.SuccessResponse(data[index:size], index=index, total=len(data)).send()
         except models.Company.DoesNotExist as e:
             return responses.ErrorResponse(message='Instance does not Found.', status=404).send()
