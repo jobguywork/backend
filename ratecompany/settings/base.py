@@ -193,11 +193,11 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_THROTTLE_RATES': {
         'user': '10/day'
-    }
-    # 'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.AcceptHeaderVersioning',
-    # 'DEFAULT_VERSION': '2.0',
-    # 'VERSION_PARAM': 'version',
-    # 'ALLOWED_VERSIONS': ('2.0', ),
+    },
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.AcceptHeaderVersioning',
+    'DEFAULT_VERSION': '1.0',
+    'VERSION_PARAM': 'version',
+    'ALLOWED_VERSIONS': ('1.0', '1.0.1'),
     # 'EXCEPTION_HANDLER': 'api.tools.exception_handler'
 }
 

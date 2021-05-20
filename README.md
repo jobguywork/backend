@@ -74,3 +74,10 @@ For openning pull requests you have to send PR's to [`develop`](https://github.c
     
     Use utilities/create_initial_data API for creation data test in system
  
+## Versioning
+
+    Set request header to:
+        Accept: application/json; version=<your reuired version>
+    
+        example:
+            Accept: application/json; version=1.0.1
