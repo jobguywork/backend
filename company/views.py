@@ -5,7 +5,7 @@ from querystring_parser import parser
 from django.contrib.auth.models import User
 from django.core.exceptions import FieldError
 from django.core.cache import cache
-from django.db.models import Count, Q, F, Case, When, Prefetch
+from django.db.models import Count, Q, F, Case, When, Prefetch, Value, CharField
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from rest_framework import decorators, generics
@@ -13,6 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.exceptions import ValidationError
 from rest_framework.throttling import UserRateThrottle
+from packaging import version
 
 from company import serializers as company_serialzier
 from review import serializers as review_serialzier
@@ -822,25 +823,54 @@ class HomeView(generics.ListAPIView):
                 cache.set(settings.DISCUSSED_COMPANY_LIST, discussed_company_list, timeout=None)
 
             context = {'request': request}
-            last_reviews = cache.get(settings.LAST_REVIEWS)
-            if not last_reviews:
-                last_reviews = review_serialzier.UserHomeCompanyReviewListSerializer(
-                    CompanyReview.objects.filter(approved=True, is_deleted=False).order_by('-created')
-                        .values('id', 'company__name', 'company__name_en', 'company__company_slug', 'company__logo',
-                                'title', 'description', 'over_all_rate', 'created', 'has_legal_issue',
-                                'approved', 'creator').distinct()[:10],
-                    many=True, context=context).data
-                cache.set(settings.LAST_REVIEWS, last_reviews, timeout=None)
+            if version.parse(request.version) < version.parse('1.0.1'):
+                last_reviews = cache.get(settings.LAST_REVIEWS)
+                if not last_reviews:
+                    last_reviews = review_serialzier.UserHomeCompanyReviewListSerializer(
+                        CompanyReview.objects.filter(approved=True, is_deleted=False).order_by('-created')
+                            .values('id', 'company__name', 'company__name_en', 'company__company_slug', 'company__logo',
+                                    'title', 'description', 'over_all_rate', 'created', 'has_legal_issue',
+                                    'approved', 'creator').distinct()[:10],
+                        many=True, context=context).data
+                    cache.set(settings.LAST_REVIEWS, last_reviews, timeout=None)
 
-            last_interviews = cache.get(settings.LAST_INTERVIEWS)
-            if not last_interviews:
-                last_interviews = review_serialzier.UserHomeInterviewListSerializer(
-                    Interview.objects.filter(approved=True, is_deleted=False).order_by('-created')
-                    .values('id', 'company__name', 'company__name_en', 'company__company_slug', 'company__logo',
-                            'title', 'description', 'created', 'total_rate', 'approved', 'has_legal_issue', 'creator',
-                            ).distinct()[:10],
-                    many=True, context=context).data
-                cache.set(settings.LAST_INTERVIEWS, last_interviews, timeout=None)
+                last_interviews = cache.get(settings.LAST_INTERVIEWS)
+                if not last_interviews:
+                    last_interviews = review_serialzier.UserHomeInterviewListSerializer(
+                        Interview.objects.filter(approved=True, is_deleted=False).order_by('-created')
+                        .values('id', 'company__name', 'company__name_en', 'company__company_slug', 'company__logo',
+                                'title', 'description', 'created', 'total_rate', 'approved', 'has_legal_issue', 'creator',
+                                ).distinct()[:10],
+                        many=True, context=context).data
+                    cache.set(settings.LAST_INTERVIEWS, last_interviews, timeout=None)
+            else:
+                arguments = parser.parse(request.GET.urlencode())
+                size = int(arguments.pop('size', 20))
+                index = int(arguments.pop('index', 0))
+                size, index = permissions.pagination_permission(request.user, size, index)
+                size = index + size
+                lcr = CompanyReview.objects.filter(approved=True,
+                                                   is_deleted=False).annotate(
+                    type=Value('REVIEW', output_field=CharField())) \
+                    .values('id', 'company__name', 'company__name_en',
+                            'company__company_slug', 'company__logo',
+                            'title', 'description', 'over_all_rate', 'created',
+                            'has_legal_issue',
+                            'approved', 'creator', 'type').distinct()
+                lir = Interview.objects.filter(approved=True, is_deleted=False).annotate(
+                    type=Value('INTERVIEW', output_field=CharField())) \
+                    .values('id', 'company__name', 'company__name_en',
+                            'company__company_slug', 'company__logo',
+                            'title', 'description', 'total_rate', 'created',
+                            'has_legal_issue',
+                            'approved', 'creator', 'type').distinct()
+
+                lqq = lcr.union(lir, all=True)
+                lqq = lqq.order_by('-created')
+                total = lqq.count()
+                reviews = review_serialzier.UserHomeReviewListSerializer(
+                    lqq[index:size], many=True, context=context
+                ).data
 
             donate = cache.get(settings.DONATE_LIST, None)
             if donate is None:
@@ -951,8 +981,6 @@ class HomeView(generics.ListAPIView):
                 'industries': industry_list[:8],
                 'company': company_list,
                 'discussed_company_list': discussed_company_list,
-                'last_reviews': last_reviews,
-                'last_interviews': last_interviews,
                 'jobguy_text': jobguy_text,
                 'quote': quote_list,
                 'total_review': total_review,
@@ -961,7 +989,17 @@ class HomeView(generics.ListAPIView):
                 'total_company': total_company,
                 'donate': donate,
             }
-            return responses.SuccessResponse(temp_data).send()
+            if version.parse(request.version) < version.parse('1.0.1'):
+                temp_data.update({
+                    'last_reviews': last_reviews,
+                    'last_interviews': last_interviews,
+                })
+                return responses.SuccessResponse(temp_data).send()
+            else:
+                temp_data.update({
+                    'reviews': reviews,
+                })
+                return responses.SuccessResponse(temp_data, index=index, total=total).send()
         except Exception as e:
             return responses.ErrorResponse(message=str(e)).send()
 
