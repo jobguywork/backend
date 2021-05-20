@@ -1013,3 +1013,44 @@ class ReplyInterviewSerializer(serializers.Serializer):
             instance.reply_created = datetime.now()
         instance.save()
         return instance
+
+
+class UserHomeReviewListSerializer(serializers.Serializer):
+    over_all_rate = serializers.ReadOnlyField()
+    id = serializers.ReadOnlyField()
+    company = PublicUserCompanySerializer()
+    # ratings
+    title = serializers.ReadOnlyField()
+    description = serializers.ReadOnlyField()
+    created = serializers.ReadOnlyField()
+    approved = serializers.ReadOnlyField()
+    has_legal_issue = serializers.ReadOnlyField()
+    type = serializers.ReadOnlyField()
+
+    def to_representation(self, instance):
+        instance['company'] = {
+            'name': instance['company__name'],
+            'name_en': instance['company__name_en'],
+            'company_slug': instance['company__company_slug'],
+            'logo': instance['company__logo'],
+        }
+        instance['created'] = instance['created'].strftime('%Y-%m-%d %H:%M')
+        instance['my_review'] = instance['creator'] == self.context['request'].user.id
+        if instance['has_legal_issue']:
+            is_deleted_text = settings.IS_DELETED_TEXT % instance['company']['name']
+            instance['title'] = is_deleted_text
+            instance['description'] = is_deleted_text
+            instance['over_all_rate'] = 0
+        else:
+            if instance['description']:
+                instance['description'] = instance['description'].replace('<br>', '<br>\n')
+                soup = BeautifulSoup(instance['description'], 'html.parser')
+                body = soup.get_text()
+                if len(body) > 300:
+                    instance['description'] = ' '.join(body[:300].split(' ')[:-1]) + ' ...'
+                else:
+                    instance['description'] = body
+            else:
+                instance['description'] = ''
+        instance = super().to_representation(instance)
+        return instance
