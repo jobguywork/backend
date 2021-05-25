@@ -471,7 +471,7 @@ class UserInsertCompanySerializer(serializers.Serializer):
 
     def validate_company_slug(self, company_slug):
         if utilities.is_slug(company_slug):
-            return company_slug
+            return utilities.check_slug_available(Company, 'company_slug', company_slug)
         raise serializers.ValidationError([{'company_slug': 'Not valid slug'}])
 
     def to_representation(self, instance):
