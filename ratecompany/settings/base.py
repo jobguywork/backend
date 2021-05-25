@@ -13,8 +13,6 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 import datetime
 
-import sentry_sdk
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -264,18 +262,3 @@ LOCATION_FIELD = {
     #     ),
     # },
 }
-
-
-#sentry
-SENTRY_URL = os.environ.get('SENTRY_URL', None)
-
-if not SENTRY_URL:
-    raise Exception('Add SENTRY_URL env variable, example: export SENTRY_URL='
-                    'https://some-id@other-id.ingest.sentry.io/last-id')
-sentry_sdk.init(
-    SENTRY_URL,
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    # We recommend adjusting this value in production.
-    traces_sample_rate=1.0
-)
