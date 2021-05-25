@@ -1,6 +1,8 @@
 from ratecompany.settings.base import *
 from ratecompany.settings.configs import *
 
+import sentry_sdk
+
 
 DEBUG = False
 
@@ -38,3 +40,17 @@ DATABASES = {
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = True
+
+#sentry
+SENTRY_URL = os.environ.get('SENTRY_URL', None)
+
+if not SENTRY_URL:
+    raise Exception('Add SENTRY_URL env variable, example: export SENTRY_URL='
+                    'https://some-id@other-id.ingest.sentry.io/last-id')
+sentry_sdk.init(
+    SENTRY_URL,
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0
+)
