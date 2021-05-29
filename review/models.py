@@ -75,7 +75,7 @@ class CompanyReview(models.Model):
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
     current_work = models.BooleanField(default=False)
-    ip = models.CharField(max_length=20, null=True, blank=True)
+    ip = models.CharField(max_length=50, null=True, blank=True)
     reply = models.CharField(max_length=40000, null=True, blank=True)
     reply_created = models.DateTimeField(null=True)
 
@@ -141,7 +141,7 @@ class Interview(models.Model):
     interview_date = models.DateField(null=True)
     response_time_before_review = models.CharField(choices=RESPONSE_TIME_CHOICES, max_length=8)
     response_time_after_review = models.CharField(choices=RESPONSE_TIME_CHOICES, null=True, max_length=8)
-    ip = models.CharField(max_length=20, null=True, blank=True)
+    ip = models.CharField(max_length=50, null=True, blank=True)
     reply = models.CharField(max_length=40000, null=True, blank=True)
     reply_created = models.DateTimeField(null=True)
 
@@ -171,7 +171,7 @@ class ReviewComment(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     review = models.ForeignKey(CompanyReview, on_delete=models.CASCADE)
-    ip = models.CharField(max_length=20, null=True, blank=True)
+    ip = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
         return self.body
@@ -185,7 +185,7 @@ class InterviewComment(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     interview = models.ForeignKey(Interview, on_delete=models.CASCADE)
-    ip = models.CharField(max_length=20, null=True, blank=True)
+    ip = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
         return self.body
