@@ -11,6 +11,7 @@ from django.contrib.gis.geos import Point
 from django.utils.translation import ugettext
 
 from company.models import Benefit, Company, Industry, Province, City, Gallery
+from review.models import Cons, Pros
 from utilities import utilities
 from utilities.exceptions import CustomException
 
@@ -283,6 +284,18 @@ class CompanySerializer(serializers.Serializer):
         return instance
 
     def to_internal_value(self, data):
+        if data.get('pros'):
+            for pros_data in data['pros']:
+                pros = Pros.objects.filter(name=pros_data['name'].strip())
+                if not pros:
+                    pros = Pros(name=pros_data['name'].strip())
+                    pros.save()
+        if data.get('cons'):
+            for cons_data in data.get('cons'):
+                cons = Cons.objects.filter(name=cons_data['name'].strip())
+                if not cons:
+                    cons = Cons(name=cons_data['name'].strip())
+                    cons.save()
         data = super().to_internal_value(data)
         return data
 
