@@ -284,18 +284,12 @@ class CompanySerializer(serializers.Serializer):
         return instance
 
     def to_internal_value(self, data):
-        if data.get('pros'):
-            for pros_data in data['pros']:
-                pros = Pros.objects.filter(name=pros_data['name'].strip())
-                if not pros:
-                    pros = Pros(name=pros_data['name'].strip())
-                    pros.save()
-        if data.get('cons'):
-            for cons_data in data.get('cons'):
-                cons = Cons.objects.filter(name=cons_data['name'].strip())
-                if not cons:
-                    cons = Cons(name=cons_data['name'].strip())
-                    cons.save()
+        if data.get('benefit'):
+            for benefit_data in data['benefit']:
+                benefit = Benefit.objects.filter(name=benefit_data['name'].strip())
+                if not benefit:
+                    benefit = Benefit(name=benefit_data['name'].strip())
+                    benefit.save()
         data = super().to_internal_value(data)
         return data
 
@@ -318,7 +312,7 @@ class CompanySerializer(serializers.Serializer):
         company = Company(**validated_data)
         company.save()
         for item in benefit:
-            benefit_item = Benefit.objects.get(name=item['name'])
+            benefit_item = Benefit.objects.get(name=item['name'].strip())
             company.benefit.add(benefit_item)
         for item in gallery:
             item['company'] = company
@@ -339,7 +333,7 @@ class CompanySerializer(serializers.Serializer):
         if validated_data.get('benefit') is not None:
             instance.benefit.clear()
             for item in validated_data.get('benefit'):
-                benefit_item = Benefit.objects.get(name=item['name'])
+                benefit_item = Benefit.objects.get(name=item['name'].strip())
                 instance.benefit.add(benefit_item)
         if validated_data.get('city') and validated_data['city']['city_slug'] != instance.city.city_slug:
             instance.city = City.objects.get(id=validated_data['city']['city_slug'])
