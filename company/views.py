@@ -418,7 +418,6 @@ class AdminCompanyInterReviewListView(generics.ListAPIView):
 
     def get(self, request, slug, *args, **kwargs):
         try:
-            permissions
             instance = self.model.objects.filter(is_deleted=False).get(company_slug=slug)
             if request.user != instance.user:
                 return responses.ErrorResponse(message='No permission.', status=403).send()
