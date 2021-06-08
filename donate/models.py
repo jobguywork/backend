@@ -51,7 +51,6 @@ class Donate(models.Model):
     def __str__(self):
         return 'Donate: {} - {} by {}'.format(self.amount, self.coin, self.name)
 
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-        super(Donate, self).save(force_insert, force_update)
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
         cache.delete(settings.DONATE_LIST)

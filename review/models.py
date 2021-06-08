@@ -88,11 +88,11 @@ class CompanyReview(models.Model):
     def get_absolute_url(self):
         return '/review/{}'.format(self.id)
 
-    def save(self, force_insert=False, force_update=False):
+    def save(self, *args, **kwargs):
         cache.delete(settings.BEST_COMPANY_LIST)
         cache.delete(settings.DISCUSSED_COMPANY_LIST)
         cache.delete(settings.TOTAL_REVIEW)
-        super(CompanyReview, self).save(force_insert, force_update)
+        super().save(*args, **kwargs)
         self.creator.profile.total_review, self.creator.profile.rate_avg = handle_user_total_rate(self.creator)
         self.creator.save()
 
@@ -154,11 +154,11 @@ class Interview(models.Model):
     def get_absolute_url(self):
         return '/interview/{}'.format(self.id)
 
-    def save(self, force_insert=False, force_update=False):
+    def save(self, *args, **kwargs):
         cache.delete(settings.BEST_COMPANY_LIST)
         cache.delete(settings.DISCUSSED_COMPANY_LIST)
         cache.delete(settings.TOTAL_INTERVIEW)
-        super(Interview, self).save(force_insert, force_update)
+        super().save(*args, **kwargs)
         self.creator.profile.total_review, self.creator.profile.rate_avg = handle_user_total_rate(self.creator)
         self.creator.save()
 
