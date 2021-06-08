@@ -25,8 +25,8 @@ class Industry(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self, force_insert=False, force_update=False):
-        super(Industry, self).save(force_insert, force_update)
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
         cache.delete(settings.INDUSTRY_LIST)
 
 
@@ -118,7 +118,7 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self, force_insert=False, force_update=False):
+    def save(self, *args, **kwargs):
         cache.delete(settings.BEST_COMPANY_LIST)
         cache.delete(settings.DISCUSSED_COMPANY_LIST)
         cache.delete(settings.TOTAL_COMPANY)
@@ -130,7 +130,7 @@ class Company(models.Model):
         for interview in self.interview_set.all():
             interview.has_legal_issue = self.has_legal_issue
             interview.save()
-        super(Company, self).save(force_insert, force_update)
+        super().save(*args, **kwargs)
 
     def handle_company_score(self):
         review_count = self.companyreview_set.filter(is_deleted=False, approved=True).count()
