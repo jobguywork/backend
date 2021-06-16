@@ -185,17 +185,14 @@ class CompanyReviewSerializer(serializers.Serializer):
             company_review.cons.add(cons)
             cons.add_cons_priority()
         validated_data['company'].handle_company_review_statics()
-        utilities.telegram_notify('New review: on {}, \n by {}, \n {}'.format(company_review.company.name,
-                                                                              company_review.creator.username,
-                                                                              '#review'),
-                                  company_review.id, 'review', company_review.title, company_review.description,
-                                  '{} {}'.format(company_review.creator.first_name, company_review.creator.last_name))
+        utilities.telegram_notify('New review: on {}, \n {}'.format(
+            company_review.company.name, '#review'
+        ), company_review.id, 'review', company_review.title, company_review.description)
 
         return company_review
 
     @transaction.atomic
     def update(self, instance, validated_data):
-        # permissions.check_update_permission(instance, validated_data)
         instance.recommend_to_friend = validated_data.get('recommend_to_friend', instance.recommend_to_friend)
         instance.state = validated_data.get('state', instance.state)
         instance.work_life_balance = validated_data.get('work_life_balance', instance.work_life_balance)
@@ -233,11 +230,9 @@ class CompanyReviewSerializer(serializers.Serializer):
             instance.job = Job.objects.get(job_slug=validated_data['job']['job_slug'])
         instance.save()
         instance.company.handle_company_review_statics()
-        utilities.telegram_notify('Review update: on {}, \n by {}, \n {}'.format(instance.company.name,
-                                                                                 instance.creator.username,
-                                                                                 '#update_review'),
-                                  instance.id, 'review', instance.title, instance.description,
-                                  '{} {}'.format(instance.creator.first_name, instance.creator.last_name))
+        utilities.telegram_notify('Update Review: on {}, \n {}'.format(
+            instance.company.name, '#update_review'
+        ), instance.id, 'review', instance.title, instance.description)
         return instance
 
     def to_internal_value(self, data):
@@ -531,11 +526,9 @@ class InterviewSerializer(serializers.Serializer):
             interview.cons.add(cons)
             cons.add_cons_priority()
         validated_data['company'].handle_company_interview_statics()
-        utilities.telegram_notify('New interview: on {}, \n by {}, \n {}'.format(interview.company.name,
-                                                                                 interview.creator.username,
-                                                                                 '#interview'),
-                                  interview.id, 'interview', interview.title, interview.description,
-                                  '{} {}'.format(interview.creator.first_name, interview.creator.last_name))
+        utilities.telegram_notify('New interview: on {}, \n {}'.format(
+            interview.company.name, '#interview'
+        ), interview.id, 'interview', interview.title, interview.description)
         return interview
 
     @transaction.atomic
@@ -576,11 +569,9 @@ class InterviewSerializer(serializers.Serializer):
 
         instance.save()
         instance.company.handle_company_interview_statics()
-        utilities.telegram_notify('Interview update: on {}, \n by {}, \n  {}'.format(instance.company.name,
-                                                                                     instance.creator.username,
-                                                                                     '#update_interview'),
-                                  instance.id, 'interview', instance.title, instance.description,
-                                  '{} {}'.format(instance.creator.first_name, instance.creator.last_name))
+        utilities.telegram_notify('Update Interview: on {}, \n  {}'.format(
+            instance.company.name, '#update_interview'
+        ), instance.id, 'interview', instance.title, instance.description)
         return instance
 
     def to_internal_value(self, data):
@@ -806,12 +797,18 @@ class ReviewCommentSerializer(serializers.Serializer):
         comment = ReviewComment(**validated_data)
         validated_data['ip'] = utilities.get_client_ip(self.context['request'])
         comment.save()
+        utilities.telegram_notify('New Review Comment: {}'.format(
+            '#review_comment'
+        ), comment.id, 'review_comment', None, comment.body)
         return comment
 
     @transaction.atomic
     def update(self, instance, validated_data):
         instance.body = validated_data.get('body', instance.body)
         instance.save()
+        utilities.telegram_notify('Update Review Comment: {}'.format(
+            '#update_review_comment'
+        ), instance.id, 'review_comment', None, instance.body)
         return instance
 
     def to_representation(self, instance):
@@ -862,12 +859,18 @@ class InterviewCommentSerializer(serializers.Serializer):
         comment = InterviewComment(**validated_data)
         validated_data['ip'] = utilities.get_client_ip(self.context['request'])
         comment.save()
+        utilities.telegram_notify('New Interview Comment: {}'.format(
+            '#interview_comment'
+        ), comment.id, 'interview_comment', None, comment.body)
         return comment
 
     @transaction.atomic
     def update(self, instance, validated_data):
         instance.body = validated_data.get('body', instance.body)
         instance.save()
+        utilities.telegram_notify('Update Interview Comment: {}'.format(
+            '#update_interview_comment'
+        ), instance.id, 'interview_comment', None, instance.body)
         return instance
 
     def to_representation(self, instance):
@@ -882,7 +885,15 @@ class InterviewCommentSerializer(serializers.Serializer):
 class BotApproveReviewSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     key = serializers.CharField(max_length=100)
-    type = serializers.ChoiceField(choices=(('review', 'review'), ('interview', 'interview')))
+    type = serializers.ChoiceField(choices=(
+        ('review', 'review'),
+        ('interview', 'interview'),
+        ('question', 'question'),
+        ('answer', 'answer'),
+        ('review_comment', 'review_comment'),
+        ('interview_comment', 'interview_comment'),
+    ))
+    approved = serializers.BooleanField()
 
 
 class ReplyCompanyReviewSerializer(serializers.Serializer):

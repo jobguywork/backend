@@ -30,7 +30,4 @@ def open_auth_user_creator(email, first_name, last_name, profile_image):
     user.profile.email = email
     user.profile.email_confirmed = True
     user.save()
-    profile_image_url = '{}{}'.format(settings.MEDIA_BASE_PATH, user.profile.profile_image)
-    utilities.telegram_notify('New user: {} {}, \n profile image: {}'.format(user.first_name, user.last_name,
-                                                                             profile_image_url))
     return user

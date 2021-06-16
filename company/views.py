@@ -326,8 +326,9 @@ class CompanyReviewListView(generics.ListAPIView):
     def get(self, request, slug, *args, **kwargs):
         try:
             instance = self.model.objects.filter(is_deleted=False, approved=True).get(company_slug=slug)
-            serialize_data = self.get_serializer(instance.companyreview_set.filter(is_deleted=False,
-                                                                                   approved=True).all(), many=True)
+            serialize_data = self.get_serializer(instance.companyreview_set.filter(
+                is_deleted=False, approved=True
+            ).all(), many=True)
             arguments = parser.parse(request.GET.urlencode())
 
             size = int(arguments.pop('size', 20))
@@ -391,8 +392,9 @@ class CompanyInterReviewListView(generics.ListAPIView):
     def get(self, request, slug, *args, **kwargs):
         try:
             instance = self.model.objects.filter(is_deleted=False, approved=True).get(company_slug=slug)
-            serialize_data = self.get_serializer(instance.interview_set.filter(is_deleted=False,
-                                                                               approved=True).all(), many=True)
+            serialize_data = self.get_serializer(instance.interview_set.filter(
+                is_deleted=False, approved=True
+            ).all(), many=True)
             arguments = parser.parse(request.GET.urlencode())
 
             size = int(arguments.pop('size', 20))
@@ -457,7 +459,9 @@ class CompanyQuestionListView(generics.ListAPIView):
     def get(self, request, slug, *args, **kwargs):
         try:
             instance = self.model.objects.filter(is_deleted=False, approved=True).get(company_slug=slug)
-            serialize_data = self.get_serializer(instance.question_set.filter(is_deleted=False), many=True)
+            serialize_data = self.get_serializer(instance.question_set.filter(
+                is_deleted=False, approved=True
+            ), many=True)
             arguments = parser.parse(request.GET.urlencode())
 
             size = int(arguments.pop('size', 20))

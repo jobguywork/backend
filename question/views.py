@@ -67,7 +67,10 @@ class UserQuestionAnswersListView(generics.ListAPIView):
             if arguments.get('order_by'):
                 sort = arguments.pop('order_by')
 
-            question = self.model.objects.get(question_slug=question_slug, is_deleted=False)
+            question = self.model.objects.get(question_slug=question_slug,
+                                              is_deleted=False,
+                                              approved=True,
+                                              )
             if not isinstance(request.user, AnonymousUser):
                 question.view.add(request.user)
             question.total_view += 1
