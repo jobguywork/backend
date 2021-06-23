@@ -196,12 +196,12 @@ def file_check_name(user_name, file, slug):
     raise serializers.ValidationError(_('There is an error with media server connection...'))
 
 
-def telegram_notify(content, id=None, type=None, title=None, body=None, name=None):
+def telegram_notify(content, id=None, type=None, title=None, body=None):
     try:
 
         resp = requests.post('https://bot.jobguy.work/api/message', headers={'token': settings.TELEGRAM_BOT_TOKEN},
                              json={'content': content, 'id': id, 'type': type, 'title': title,
-                                   'body': body, 'name': name})
+                                   'body': body})
     except Exception as e:
         pass
 

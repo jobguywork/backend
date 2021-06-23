@@ -37,7 +37,4 @@ class DonateSerializer(serializers.Serializer):
     def create(self, validated_data):
         donate = Donate(**validated_data)
         donate.save()
-        utilities.telegram_notify('New Donate: BY {}, \n {} on {}, \n link: {} {}'.format(donate.name, donate.amount,
-                                                                                          donate.get_coin_display(),
-                                                                                          donate.link, '#donate'))
         return donate

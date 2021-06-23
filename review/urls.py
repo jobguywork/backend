@@ -59,5 +59,6 @@ urlpatterns = [
     path('interview_comment/<int:id>/remove_vote/', views.RemoveVoteInterviewCommentView.as_view()),
     path('interview_comment/<int:id>/add_down_vote/', views.AddDownVoteInterviewCommentView.as_view()),
     path('interview_comment/<int:id>/remove_down_vote/', views.RemoveDownVoteInterviewCommentView.as_view()),
+    # bot
     path('bot_review/', views.BotApproveReviewView.as_view()),
     ]

@@ -10,7 +10,7 @@ urlpatterns = [
     re_path(r'question/(?P<question_slug>[\w-]+)/remove_down_vote/$', views.RemoveDownVoteQuestionView.as_view()),
     path('question/create/', views.QuestionCreateView.as_view()),
     path('question/list/', views.QuestionListView.as_view()),
-    path('public/question/list/', views.UserQuestionListView.as_view()),
+    # path('public/question/list/', views.UserQuestionListView.as_view()),
     path('question/<int:id>/update/', views.QuestionUpdateView.as_view()),
     path('question/<int:id>/delete/', views.QuestionDeleteView.as_view()),
     path('public/question/<slug:question_slug>/answers/', views.UserQuestionAnswersListView.as_view()),

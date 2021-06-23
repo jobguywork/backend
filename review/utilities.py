@@ -1,3 +1,5 @@
+from django.core.cache import cache
+
 from review.models import CompanyReview
 
 
@@ -22,3 +24,12 @@ def salary_handler(salary, salary_type, resp=False):
             return salary * 20 * 9
 
 
+def check_notify_to_telegram_channel(data):
+    if not data["approved"]:
+        return False
+    notified = cache.get("CHANNEL_NOTIFY_{}_{}".format(data["type"], data["id"]))
+    if notified:
+        return False
+    cache.set("CHANNEL_NOTIFY_{}_{}".format(data["type"], data["id"]), True,
+              timeout=7*24*60*60)
+    return True

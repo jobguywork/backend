@@ -49,12 +49,19 @@ class QuestionSerializer(serializers.Serializer):
                                                                          + '-{}'.format(validated_data['company'].company_slug))
         question = Question(**validated_data)
         question.save()
+        utilities.telegram_notify('New Question: on {}, \n {}'.format(
+            question.company.name, '#question'
+        ), question.id, 'question', question.title, question.body)
         return question
 
     @transaction.atomic
     def update(self, instance, validated_data):
         instance.title = validated_data.get('title', instance.title)
         instance.body = validated_data.get('body', instance.body)
+        instance.save()
+        utilities.telegram_notify('Update Question: on {}, \n {}'.format(
+            instance.company.name, '#update_question'
+        ), instance.id, 'question', instance.title, instance.body)
         return instance
 
     def to_representation(self, instance):
@@ -87,11 +94,18 @@ class AnswerSerializer(serializers.Serializer):
         validated_data['question'] = Question.objects.get(question_slug=validated_data['question']['question_slug'])
         answer = Answer(**validated_data)
         answer.save()
+        utilities.telegram_notify('New Answer: on {}, \n {}'.format(
+            answer.company.name, '#answer'
+        ), answer.id, 'answer', None, answer.body)
         return answer
 
     @transaction.atomic
     def update(self, instance, validated_data):
         instance.body = validated_data.get('body', instance.body)
+        instance.save()
+        utilities.telegram_notify('Update Answer: on {}, \n {}'.format(
+            instance.company.name, '#update_answer'
+        ), instance.id, 'answer', None, instance.body)
         return instance
 
     def to_representation(self, instance):
