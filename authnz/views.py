@@ -238,8 +238,6 @@ class ConfirmEmailView(generics.RetrieveAPIView):
             if user is not None and utilities.account_activation_token.check_token(user, token):
                 user.profile.email_confirmed = True
                 user.profile.save()
-                utilities.telegram_notify(
-                    'New user: {}'.format(user.username))
                 return render(request, 'mail_confirmed.html', {'domain': get_current_site(request).domain,
                                                                'name': user.username})
             else:

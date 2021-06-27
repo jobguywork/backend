@@ -12,6 +12,7 @@ class Question(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
+    approved = models.BooleanField(default=False)
     vote = models.ManyToManyField(User, related_name='question_votes')
     down_vote = models.ManyToManyField(User, related_name='question_down_votes')
     view = models.ManyToManyField(User, related_name='question_views')
@@ -27,6 +28,7 @@ class Answer(models.Model):
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
+    approved = models.BooleanField(default=False)
     vote = models.ManyToManyField(User, related_name='answer_votes')
     down_vote = models.ManyToManyField(User, related_name='answer_down_votes')
 

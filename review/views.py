@@ -7,18 +7,20 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.throttling import UserRateThrottle
 
-from utilities import responses, utilities
-from utilities.exceptions import CustomException
-from utilities.tools import create, delete, list_result, update, retrieve
-from utilities.utilities import CUSTOM_PAGINATION_SCHEMA
-from utilities import permissions
+from question.models import Answer, Question
 from review.models import Pros, Cons, CompanyReview, Interview, ReviewComment, InterviewComment
 from review.serializers import (ProsSerializer, UserProsSerializer, ConsSerializer, UserConsSerializer,
                                 CompanyReviewSerializer, UserCompanyReviewSerializer, InterviewSerializer,
                                 UserInterviewSerializer, ReviewCommentSerializer, UserReviewCommentSerializer,
                                 InterviewCommentSerializer, BotApproveReviewSerializer, ReplyCompanyReviewSerializer,
                                 ReplyInterviewSerializer)
-
+from review.utilities import (check_notify_to_telegram_channel, get_compnay,
+                              send_notice_instance_rejected)
+from utilities import responses, utilities
+from utilities.exceptions import CustomException
+from utilities.tools import create, delete, list_result, update, retrieve
+from utilities.utilities import CUSTOM_PAGINATION_SCHEMA
+from utilities import permissions
 
 # Pros
 @decorators.authentication_classes([JSONWebTokenAuthentication])
@@ -566,7 +568,9 @@ class ReviewCommentListView(generics.ListAPIView):
                         pass
                     else:
                         raise self.model.DoesNotExist
-                serialize_data = self.get_serializer(instance.reviewcomment_set.filter(is_deleted=False).all(), many=True)
+                serialize_data = self.get_serializer(instance.reviewcomment_set.filter(
+                    is_deleted=False, approved=True
+                ).all(), many=True)
                 data = serialize_data.data
                 data = sorted(data, key=lambda x: x['vote_count'], reverse=True)
             else:
@@ -747,7 +751,9 @@ class InterviewCommentListView(generics.ListAPIView):
                         pass
                     else:
                         raise self.model.DoesNotExist
-                serialize_data = self.get_serializer(instance.interviewcomment_set.filter(is_deleted=False).all(), many=True)
+                serialize_data = self.get_serializer(instance.interviewcomment_set.filter(
+                    is_deleted=False, approved=True
+                ).all(), many=True)
 
                 data = serialize_data.data
                 data = sorted(data, key=lambda x: x['vote_count'], reverse=True)
@@ -877,35 +883,65 @@ class BotApproveReviewView(generics.CreateAPIView):
         try:
             serialize_data = self.get_serializer(data=request.data)
             if serialize_data.is_valid(raise_exception=True):
-                if serialize_data.data['key'] == settings.BOT_APPROVE_KEY:
-                    if serialize_data.data['type'] == 'review':
-                        review = CompanyReview.objects.get(id=serialize_data.data['id'])
-                    elif serialize_data.data['type'] == 'interview':
-                        review = Interview.objects.get(id=serialize_data.data['id'])
+                if serialize_data.data["key"] == settings.BOT_APPROVE_KEY:
+                    instance_map = {
+                        "review": CompanyReview,
+                        "interview": Interview,
+                        "question": Question,
+                        "answer": Answer,
+                        "review_comment": ReviewComment,
+                        "interview_comment": InterviewComment,
+                    }
+                    if serialize_data.data["type"] in instance_map.keys():
+                        try:
+                            instance = instance_map[serialize_data.data["type"]].objects.get(
+                                id=serialize_data.data["id"]
+                            )
+                        except (
+                                CompanyReview.DoesNotExist, Interview.DoesNotExist,
+                                Question.DoesNotExist, Answer.DoesNotExist,
+                                ReviewComment.DoesNotExist, InterviewComment.DoesNotExist
+                                ) as e:
+                            raise CustomException(detail="Instance does not Found.",
+                                                  code=404)
                     else:
-                        raise CustomException(detail='Instance does not Found.', code=404)
-                    review.approved = True
-                    review.save()
-                    cache.delete(settings.LAST_REVIEWS)
-                    cache.delete(settings.LAST_INTERVIEWS)
-                    if serialize_data.data['type'] == 'review':
-                        review_link = '{}/review/{}'.format(settings.WEB_BASE_PATH, review.id)
-                        utilities.telegram_notify_channel(
-                            'تجربه کاری {} در {}, را در جابگای بخوانید. \n {} \n {} \n {}'.format(
-                                review.title, review.company.name, review_link,
-                                '#' + review.company.city.city_slug, '#review'))
-                        review.company.handle_company_review_statics()
-                    elif serialize_data.data['type'] == 'interview':
-                        review_link = '{}/interview/{}'.format(settings.WEB_BASE_PATH, review.id)
-                        utilities.telegram_notify_channel(
-                            'تجربه مصاحبه {} در {}, را در جابگای بخوانید. \n {} \n {} \n {}'.format(
-                                review.title, review.company.name, review_link,
-                                '#'+review.company.city.city_slug, '#interview'))
-                        review.company.handle_company_interview_statics()
+                        raise CustomException(detail="Instance type does not exist.")
+                    instance.approved = serialize_data.data["approved"]
+                    instance.save()
+                    if serialize_data.data["type"] in ["review", "interview"]:
+                        cache.delete(settings.LAST_REVIEWS)
+                        cache.delete(settings.LAST_INTERVIEWS)
+                        if check_notify_to_telegram_channel(serialize_data.data):
+                            if serialize_data.data["type"] == "review":
+                                review_link = "{}/review/{}".format(settings.WEB_BASE_PATH, instance.id)
+                                utilities.telegram_notify_channel(
+                                    "تجربه کاری {} در {}, را در جابگای بخوانید. \n {} \n {} \n {}".format(
+                                        instance.title, instance.company.name, review_link,
+                                        "#" + instance.company.city.city_slug, "#review"))
+                                instance.company.handle_company_review_statics()
+                            elif serialize_data.data["type"] == "interview":
+                                review_link = "{}/interview/{}".format(settings.WEB_BASE_PATH, instance.id)
+                                utilities.telegram_notify_channel(
+                                    "تجربه مصاحبه {} در {}, را در جابگای بخوانید. \n {} \n {} \n {}".format(
+                                        instance.title, instance.company.name, review_link,
+                                        "#"+instance.company.city.city_slug, "#interview"))
+                                instance.company.handle_company_interview_statics()
+                    if not instance.approved:
+                        instance_type = serialize_data.data["type"]
+                        fa_map = {
+                            "review": "تجربه کاری",
+                            "interview": "تجربه مصاحبه",
+                            "question": "سوال",
+                            "answer": "پاسخ",
+                            "review_comment": "نظر",
+                            "interview_comment": "نظر",
+                        }
+                        company = get_compnay(instance, instance_type)
+                        send_notice_instance_rejected(
+                            instance.creator, fa_map[instance_type], company
+                        )
                     return responses.SuccessResponse().send()
                 else:
-                    raise CustomException(detail='Instance does not Found.', code=404)
+                    raise CustomException(detail="Instance does not Found.", code=404)
         except CustomException as e:
             return responses.ErrorResponse(message=e.detail, status=e.status_code).send()
-        except self.model.DoesNotExist as e:
-            return responses.ErrorResponse(message='Instance does not Found.', status=404).send()
