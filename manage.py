@@ -3,7 +3,10 @@ import os
 import sys
 
 if __name__ == '__main__':
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ratecompany.settings.development')
+    if 'test' in sys.argv:
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ratecompany.settings.tests')
+    else:
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ratecompany.settings.development')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
