@@ -14,7 +14,8 @@ from review.serializers import (ProsSerializer, UserProsSerializer, ConsSerializ
                                 UserInterviewSerializer, ReviewCommentSerializer, UserReviewCommentSerializer,
                                 InterviewCommentSerializer, BotApproveReviewSerializer, ReplyCompanyReviewSerializer,
                                 ReplyInterviewSerializer)
-from review.utilities import check_notify_to_telegram_channel
+from review.utilities import (check_notify_to_telegram_channel, get_compnay,
+                              send_notice_instance_rejected)
 from utilities import responses, utilities
 from utilities.exceptions import CustomException
 from utilities.tools import create, delete, list_result, update, retrieve
@@ -925,6 +926,20 @@ class BotApproveReviewView(generics.CreateAPIView):
                                         instance.title, instance.company.name, review_link,
                                         "#"+instance.company.city.city_slug, "#interview"))
                                 instance.company.handle_company_interview_statics()
+                    if not instance.approved:
+                        instance_type = serialize_data.data["type"]
+                        fa_map = {
+                            "review": "تجربه کاری",
+                            "interview": "تجربه مصاحبه",
+                            "question": "سوال",
+                            "answer": "پاسخ",
+                            "review_comment": "نظر",
+                            "interview_comment": "نظر",
+                        }
+                        company = get_compnay(instance, instance_type)
+                        send_notice_instance_rejected(
+                            instance.creator, fa_map[instance_type], company
+                        )
                     return responses.SuccessResponse().send()
                 else:
                     raise CustomException(detail="Instance does not Found.", code=404)
