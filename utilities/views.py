@@ -68,6 +68,8 @@ class MergeCompanyView(generics.CreateAPIView):
 
                 src.is_deleted = True
                 src.save()
+                des.handle_company_review_statics()
+                des.handle_company_interview_statics()
             return responses.SuccessResponse({}, status=200).send()
         return responses.ErrorResponse(message="not valid data",
                                        status=400).send()
