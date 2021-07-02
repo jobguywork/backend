@@ -4,6 +4,7 @@ import os
 from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.conf import settings
+from django.db import transaction
 from rest_framework import generics
 from rest_framework import decorators
 from rest_framework.permissions import IsAuthenticated
@@ -13,8 +14,63 @@ import pandas as pd
 
 from utilities import responses
 from config.models import IntegerConfig
+from company.models import Company
+from utilities.permissions import SuperUserPermission
 from utilities.utilities import CUSTOM_UPLOAD_SCHEMA, file_check_name
-from utilities.serializers import FileUploadSerializer
+from utilities.serializers import FileUploadSerializer, MergeCompanySerializer
+
+
+@decorators.authentication_classes([JSONWebTokenAuthentication])
+@decorators.permission_classes([IsAuthenticated,SuperUserPermission])
+@decorators.schema(CUSTOM_UPLOAD_SCHEMA)
+class MergeCompanyView(generics.CreateAPIView):
+    """
+    Merge company data
+
+    merge src data to des and then delete src company
+
+    set id as src and des
+    """
+    serializer_class = MergeCompanySerializer
+    throttle_classes = []
+
+    def post(self, request, *args, **kwargs):
+        serialize_data = self.get_serializer(data=request.data)
+        if serialize_data.is_valid():
+            try:
+                src = Company.objects.get(id=serialize_data.validated_data["src"],
+                                          is_deleted=False)
+            except Company.DoesNotExist as e:
+                return responses.ErrorResponse(message="Src company does not exist",
+                                               status=400).send()
+
+            try:
+                des = Company.objects.get(id=serialize_data.validated_data["des"],
+                                          is_deleted=False)
+            except Company.DoesNotExist as e:
+                return responses.ErrorResponse(message="Des company does not exist",
+                                               status=400).send()
+            with transaction.atomic():
+                # review
+                for review in src.companyreview_set.all():
+                    review.company = des
+                    review.save()
+
+                # interview
+                for interview in src.interview_set.all():
+                    interview.company = des
+                    interview.save()
+
+                # question
+                for question in src.question_set.all():
+                    question.company = des
+                    question.save()
+
+                src.is_deleted = True
+                src.save()
+            return responses.SuccessResponse({}, status=200).send()
+        return responses.ErrorResponse(message="not valid data",
+                                       status=400).send()
 
 
 @decorators.authentication_classes([JSONWebTokenAuthentication])

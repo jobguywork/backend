@@ -30,3 +30,8 @@ def file_validator(file):
 class FileUploadSerializer(serializers.Serializer):
     file = serializers.FileField(validators=[file_validator])
     slug = serializers.SlugField(max_length=150, min_length=5)
+
+
+class MergeCompanySerializer(serializers.Serializer):
+    src = serializers.IntegerField()
+    des = serializers.IntegerField()
