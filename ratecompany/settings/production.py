@@ -1,3 +1,10 @@
+import os
+
+from dotenv import load_dotenv
+
+dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
+load_dotenv(dotenv_path)
+
 from ratecompany.settings.base import *
 from ratecompany.settings.configs import *
 
@@ -28,9 +35,9 @@ EMAIL_USE_TLS = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'jgdb',
-        'USER': 'jobguy',
-        'PASSWORD': 'J0bGUYdB',
+        'NAME': os.environ.get('POSTGRES_DB'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
         'HOST': 'localhost',
         'PORT': 5432,
     }
@@ -41,7 +48,7 @@ DATABASES = {
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_REDIRECT = True
 
-#sentry
+# Sentry
 SENTRY_URL = os.environ.get('SENTRY_URL', None)
 
 if not SENTRY_URL:
