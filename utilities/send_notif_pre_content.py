@@ -34,5 +34,5 @@ def send_notif():
     # answer
     for answer in Answer.objects.filter(approved=False):
         utilities.telegram_notify('New Answer: on {}, \n {}'.format(
-            answer.company.name, '#answer'
+            answer.question.company.name, '#answer'
         ), answer.id, 'answer', None, answer.body)
