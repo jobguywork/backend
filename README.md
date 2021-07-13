@@ -81,3 +81,53 @@ For openning pull requests you have to send PR's to [`develop`](https://github.c
     
         example:
             Accept: application/json; version=1.0.1
+
+
+
+## API Documentaion 
+Jobguy uses swagger to generate api docs
+
+you can see docs [here](https://api.jobguy.work/swagger/)
+
+if you head to api link, you'll see this page.
+
+this is the public API 
+
+![public api screen](./screenshots/public_api_screen.png)
+
+you can expand this parts and easily try them.
+
+jobguy has more than these public endpoints.
+
+if you want to access those endpoints, you need to authenticate.
+
+to do so, expand the **authnz** part,and you'll see something like this:
+
+![auth view screen](./screenshots/auth_view_screen.png)
+
+### follow these steps for authentication 
+
+1. click on `/authnz/login_email/` endpoint
+   
+
+2. click on Example value box on right side, so the required body parameters will appear in data input, and fill it with your own data.
+   
+
+3. after you click on **Try it out!**, you'll get a response (like following image)
+
+![token included response screen](./screenshots/token_included_response_screen.png)
+
+4. copy the token value, then click on `Authorize` button on top right of the screen, you'll see something like this:
+
+![auth popup screen](./screenshots/auth_pop_up_screen.png)
+
+5. fill the *value* input in this format: `JWT YOUR-TOKEN` (as you can see in above image) and then click on Authorize button.
+
+that's it :)
+
+_now you're authorized._
+
+after authorization, you'll see more endpoints like this:
+
+![after auth screen](./screenshots/after_authorization_screen.png)
+
