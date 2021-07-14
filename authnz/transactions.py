@@ -11,7 +11,7 @@ def register_user_with_email_and_password(email, password):
     user.set_password(password)
     user.save()
     user.profile.email = email
-    user.save()
+    user.profile.save(update_fields=["email"])
     return user
 
 
@@ -19,7 +19,8 @@ def register_user_with_email_and_password(email, password):
 def change_user_password(user, password):
     user.set_password(password)
     user.profile.jwt_secret = utilities.uuid_str()
-    user.save()
+    user.save(update_fields=["password"])
+    user.profile.save(update_fields=["jwt_secret"])
 
 
 @transaction.atomic
@@ -29,5 +30,5 @@ def open_auth_user_creator(email, first_name, last_name, profile_image):
     user.profile.profile_image = utilities.file_uploader(user.profile.nick_name, profile_image)
     user.profile.email = email
     user.profile.email_confirmed = True
-    user.save()
+    user.profile.save(update_fields=["profile_image", "email", "email_confirmed"])
     return user

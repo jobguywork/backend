@@ -155,7 +155,7 @@ def create_data(main_url):
     user = User.objects.last()
     user.is_staff = True
     user.is_superuser = True
-    user.save()
+    user.save(update_fields=["is_staff", "is_superuser"])
     ADMIN_HEADER = {
         'Content-Type': 'application/json',
         'Authorization': 'JWT ' + resp.json()['data']['token']

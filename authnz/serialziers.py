@@ -78,7 +78,8 @@ class UserSerializer(serializers.Serializer):
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.profile.profile_image = validated_data.get('profile_image', instance.profile.profile_image)
         instance.profile.biography = validated_data.get('biography', instance.profile.biography)
-        instance.save()
+        instance.save(update_fields=["first_name", "last_name"])
+        instance.profile.save(update_fields=["nick_name", "profile_image", "biography"])
         return instance
 
     def to_representation(self, instance):

@@ -68,7 +68,7 @@ class UserAdmin(admin.ModelAdmin):
     def calculate_review_rate(self, request, queryset):
         for user in queryset.all():
             user.profile.total_review, user.profile.rate_avg = handle_user_total_rate(user)
-            user.save()
+            user.profile.save(update_fields=["total_review", "rate_avg"])
 
     calculate_review_rate.short_description = 'Calculate user total review rate'
     calculate_review_rate.allowed_permissions = ('change',)
@@ -76,7 +76,7 @@ class UserAdmin(admin.ModelAdmin):
     def change_jwt(self, request, queryset):
         for user in queryset.all():
             user.profile.jwt_secret = uuid_str()
-            user.save()
+            user.profile.save(update_fields=["jwt_secret"])
 
     change_jwt.short_description = 'Change user jwt'
     change_jwt.allowed_permissions = ('change',)
