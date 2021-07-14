@@ -94,7 +94,7 @@ class CompanyReview(models.Model):
         cache.delete(settings.TOTAL_REVIEW)
         super().save(*args, **kwargs)
         self.creator.profile.total_review, self.creator.profile.rate_avg = handle_user_total_rate(self.creator)
-        self.creator.save()
+        self.creator.profile.save(update_fields=["total_review", "rate_avg"])
 
 
 class Interview(models.Model):
@@ -160,7 +160,7 @@ class Interview(models.Model):
         cache.delete(settings.TOTAL_INTERVIEW)
         super().save(*args, **kwargs)
         self.creator.profile.total_review, self.creator.profile.rate_avg = handle_user_total_rate(self.creator)
-        self.creator.save()
+        self.creator.profile.save(update_fields=["total_review", "rate_avg"])
 
 
 class ReviewComment(models.Model):

@@ -43,10 +43,6 @@ class Profile(models.Model):
             Profile.objects.create(user=instance)
             cache.delete(settings.TOTAL_USER)
 
-    @receiver(post_save, sender=User)
-    def save_user_profile(sender, instance, **kwargs):
-        instance.profile.save()
-
     def hash_user_data(self):
         if self.email:
             self.email = md5(self.email.encode()).hexdigest()[:30]
@@ -59,6 +55,6 @@ class Profile(models.Model):
         if self.user.email:
             self.user.email = md5(self.user.email.encode()).hexdigest()[:30]
         self.user.username = md5(self.user.username.encode()).hexdigest()[:30]
-        self.save()
-        self.user.profile.jwt_secret = uuid_str()
-        self.user.save()
+        self.jwt_secret = uuid_str()
+        self.user.save(update_fields=["first_name", "last_name", "email", "username"])
+        self.save(update_fields=["email", "mobile", "jwt_secret"])

@@ -48,7 +48,7 @@ class RegisterWithEmailView(generics.CreateAPIView):
                 elif user:
                     permissions.check_send_email_permission(email)
                     user.set_password(serialized_data.data['password'])
-                    user.save()
+                    user.save(update_fields=["password"])
                     utilities.send_email_confirm(user, request)
                     return responses.SuccessResponse().send()
                 else:
@@ -237,7 +237,7 @@ class ConfirmEmailView(generics.RetrieveAPIView):
 
             if user is not None and utilities.account_activation_token.check_token(user, token):
                 user.profile.email_confirmed = True
-                user.profile.save()
+                user.profile.save(update_fields=["email_confirmed"])
                 return render(request, 'mail_confirmed.html', {'domain': get_current_site(request).domain,
                                                                'name': user.username})
             else:
@@ -426,7 +426,7 @@ class SetSocialTokenView(generics.GenericAPIView):
                     else:
                         request.user.profile.email = email
                         request.user.profile.email_confirmed = True
-                        request.user.save()
+                        request.user.profile.save(update_fields=["email", "email_confirmed"])
                 else:
                     raise authnz_exceptions.CustomException(detail=_('Wrong backend'))
             return responses.SuccessResponse().send()
